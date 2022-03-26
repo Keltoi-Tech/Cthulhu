@@ -1,0 +1,28 @@
+export const sampleHead = {
+    title:'Cthulhu',
+    favicon:'img/logo.png',
+    metas:[
+        {
+            charset:'utf-8'
+        },
+        {
+            name:'viewport',
+            content:'width=device-width',
+            initialScale:1
+        }
+    ],
+    styles:[
+        {
+            href:'https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap'
+        },
+        {
+            href:'css/style.css'
+        }
+    ],
+    scripts:[
+        {
+            src:'https://kit.fontawesome.com/fe2911a7c9.js',
+            crossorigin:'anonymous'
+        }
+    ]
+};
