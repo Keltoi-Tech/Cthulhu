@@ -2,7 +2,7 @@
   "name": "cthulhu",
   "version": "1.0.0",
   "private": "true",
-  "scripts": {
+    "scripts": {
     "build": "webpack"
   },
   "devDependencies": {

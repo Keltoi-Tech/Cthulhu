@@ -8,13 +8,14 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-          title: 'Cthulhu',
+          title: 'Cthulhu'
         })
     ],    
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: '[name].js',
-      clean:true
+      clean:true,
+      publicPath:'/'
     },
     devServer:{
       host:'localhost',

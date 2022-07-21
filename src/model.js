@@ -1,3 +1,4 @@
+
 let prefix='app';
 
 export const register=(name,component)=>customElements.define(`${prefix}-${name}`,component);
@@ -12,31 +13,28 @@ export const kebabize=str=>str.split('').map((s,i)=>kebab(s,i)).join('');
 
 class Fhtagn extends HTMLElement
 {
-    constructor(o,s=undefined){
+    constructor(o){
         super();
         this.element = this.attachShadow({mode:'closed'});
         this.doom = o;
-        if (!!s)
-            cthulhu(this.element,this.doom,s);
-        else 
-            cthulhu(this.element,this.doom);
+        cthulhu(this.element,this.doom);
     }
 }
 
 customElements.define('component-fthagn',Fhtagn);
 
-const build=async (e,o,p,s=undefined)=>{
+const build=async (e,o,p)=>{
     if (Array.isArray(o[p]))
         o[p].forEach(async le=>{
             if (le instanceof (Fhtagn))
                 e.appendChild(le);
             else 
-                e.appendChild(await fhtagn(p,le,s))
+                e.appendChild(await fhtagn(p,le))
         });
     else if(o[p] instanceof Fhtagn)
         e.appendChild(o[p]);
     else
-        e.appendChild(await fhtagn(p,o[p],s));
+        e.appendChild(await fhtagn(p,o[p]));
 }
 
 const doom=(o,e)=>{
@@ -80,12 +78,12 @@ const doom=(o,e)=>{
     return o;
 }
 
-const fhtagn=async (p,o,s=undefined)=>{
+const fhtagn=async (p,o)=>{
     let e = document.createElement(kebabize(p));
 
-    if(!o.attr)o.attr={};
+    if(!('attr' in o))o.attr={};
 
-    if (!!o.event)
+    if ('event' in o)
         Object
         .keys(o.event)
         .forEach(ev=>e.addEventListener(ev,o.event[ev]));
@@ -94,18 +92,17 @@ const fhtagn=async (p,o,s=undefined)=>{
 
     o = doom(o,e);
 
-    await s?o.build(s):o.build();
+    await o.build();
 
     return e;
 }
 
-export const component=(o,s=undefined)=>
-    !!s?new Fhtagn(o,s):new Fhtagn(o);
+export const component=(o)=>new Fhtagn(o);
 
-export const cthulhu=async(p,o,s=undefined)=>{
+export const cthulhu=async(p,o)=>{
     Object
     .keys(o)
-    .forEach(async prop=>await build(p,o,prop,s));
+    .forEach(async prop=>await build(p,o,prop));
 }
 
 export class Cthulhu extends HTMLElement{
@@ -125,7 +122,7 @@ export class Cthulhu extends HTMLElement{
         Cthulhu.observedAttributes.forEach(attr=>{
             this[attr]=this.getAttribute(attr);
         });
-        cthulhu(this.element,this.doom,this.service);
+        cthulhu(this.element,this.doom);
     }
 
     attributeChangedCallback(name, oldValue, newValue) 
@@ -138,7 +135,6 @@ export class Cthulhu extends HTMLElement{
 
     disconnectedCallback(){
         this.doom = null;
-        this.service = null;
         this.attrs = null;
     }    
 }
