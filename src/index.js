@@ -9,28 +9,47 @@ const c = new Cthulhu({
             {
                 content:'Opção 1',
                 events:{
-                    click:async ()=>{
-                        c.h1.content="Bem vindo o caraleo";
-                        c.h1.attributes={
-                            style:'color:rgb(255,255,0)'
-                        }
-                        await c.h1.build();
-
-                        c.ul.remove('li',0);
-                        c.ul.append({
-                            li:[
-                                {content:'Mais uma opção'}
-                            ]
-                        })
-                    }
+                    click:async ()=>await change()
                 }
             },
-            {content:'Opção 2'},
-            {content:'Opção 3'},
-            {content:'Opção 4'}
+            {
+                content:'Opção 2',
+                events:{
+                    click:async ()=>await change()
+                }
+            },
+            {
+                content:'Opção 3',
+                events:{
+                    click:async ()=>await change()
+                }
+            },
+            {
+                content:'Opção 4',
+                events:{
+                    click:async ()=>await change()
+                }
+            }
         ]
     }
 })
+
+const change=async()=>{
+    c.h1.content="Bem vindo o caraleo";
+    c.h1.attributes={
+        style:'color:rgb(255,255,0)'
+    }
+    c.ul.remove('li',0);
+    c.ul.li.push({
+        content:'Alea Tório',
+        events:{
+            click:async ()=>await change()
+        }
+    })
+
+    await c.h1.build();
+    await c.ul.build();
+}
 
 c.build(true)
 .then(o=>document.body.appendChild(o))

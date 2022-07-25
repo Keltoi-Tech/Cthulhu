@@ -1,3 +1,27 @@
+import { kek } from "./model";
+
+class ComponentRoot extends HTMLElement{
+    #root;
+    #cthulhu;
+    constructor(cthulhu,name=''){
+        super();
+        this.#cthulhu = cthulhu;
+        this.#root = this.attachShadow({mode:'closed'});
+        this.#cthulhu.build(true).then(e=>this.#root.appendChild(e));
+        this.setAttribute('name',name);
+    }
+
+    get root(){
+        return this.#root;
+    }
+
+    get cthulhu(){
+        return this.#cthulhu;
+    }
+}
+if (customElements.get('component-root')===undefined) 
+    customElements.define('component-root',ComponentRoot);
+
 export class Cthulhu{
     #element = new DocumentFragment();
     #content = undefined|'';
@@ -33,17 +57,6 @@ export class Cthulhu{
             this.setAttribute(prop,val);
     }
 
-    removeAttribute=(name='')=>{
-        this.#attributes.delete(name);
-        this.#state.attributes.set(name,true);
-    }
-
-    setAttribute=(name='',value)=>{
-        if (this.#attributes===0) this.#attributes = new Map();
-        this.#attributes.set(name,value);
-        this.#state.attributes.set(name,true);
-    }
-
     get events(){
         return Object.fromEntries(this.#events);
     }
@@ -52,47 +65,76 @@ export class Cthulhu{
         const ev = Object.entries(value);
         for (const [prop,val] of ev)
             this.addEvent(prop,val);
+    }    
+
+    async removeAttribute(name=''){
+        this.#attributes.delete(name);
+        this.#state.attributes.set(name,true);
     }
 
-    addEvent=(name='',event=()=>{})=>{
+    setAttribute(name='',value){
+        if (this.#attributes===0) this.#attributes = new Map();
+        this.#attributes.set(name,value);
+        this.#state.attributes.set(name,true);
+    }
+
+    async addEvent(name='',event=()=>{}){
         this.#events.set(name,event);
         this.#state.events.set(name,true);
     }
 
-    removeEvent=(name='')=>{
+    async removeEvent(name=''){
         this.#eventsToRemove.set(name,this.#events.get(name))
         this.#events.delete(name);
         this.#state.events.set(name,true);
     }
 
-    remove=(child='',index=0)=>{
-        if (this[child] instanceof Array)
-            this.#element.removeChild(this[child][index].element);
-        else 
-            this.#element.removeChild(this[child].element);
-    }
+    dispose(){
+        for (const [event,callback] of this.#events)
+            this.#element.removeEventListener(event,callback);
 
-    append=async (o={})=>{
-        const map = new Map(Object.entries(o));
+        const me = new Map(Object.entries(this));
 
-        for(const [prop,e] of map)
-        {
-            if (Array.isArray(map.get(prop))){
-                this[prop] = e.map(sub=>sub instanceof Cthulhu?sub:new Cthulhu(sub,prop));
-                this[prop].forEach(async p=>this.#element.appendChild(await p.build(true)));
-            }
-            else 
-            {
-                this[prop] = e instanceof Cthulhu?e:new Cthulhu(e,prop);        
-                this.#element.appendChild(await this[prop].build(true));
+        for (const [prop,instance] of me){
+            if (instance instanceof Cthulhu)
+                instance.dispose();
+            else if (instance instanceof Array){
+                instance.forEach(i=>{
+                    if (i instanceof Cthulhu)i.dispose();
+                });
             }
         }
     }
 
-    constructor(o={},name=''){
+    async remove(child='',index=0){
+        if (this[child] instanceof Array)
+        {
+            const subject = this[child][index];
+            if (subject instanceof Cthulhu){
+                subject.dispose();
+                this.#element.removeChild(this[child][index].element);
+            }
+            
+            this[child].splice(index,1);
+        }
+        else
+        {
+            if (this[child] instanceof Cthulhu){
+                this[child].dispose();
+                this.#element.removeChild(this[child].element);
+            }
+            
+            delete this[child];
+        } 
+    }
+
+    constructor(o={},name='',component=false){
         const map = new Map(Object.entries(o));
 
-        if (name!='')this.#element = document.createElement(name);
+        if (name!='')
+            this.#element = document.createElement(kek(name));
+        else if(component)
+            this.#element = new ComponentRoot(o,name).cthulhu;
 
         if (map.has('content')){
             this.#content= map.get('content');
@@ -120,62 +162,74 @@ export class Cthulhu{
                 :this[prop] = e instanceof Cthulhu?e:new Cthulhu(e,prop);
     }
 
-    async build(compose=false){
+    conciliateAttributes(key=''){
+        if (this.#attributes.has(key))
+        {
+            this.#element.setAttribute(kek(key),this.#attributes.get(key));
+            this.#state.attributes.set(key,false);
+        }
+        else
+        {
+            this.#element.removeAttribute(key); 
+            this.#state.attributes.delete(key);
+        }
+    }
+
+    conciliateEvents(key=''){
+        if (this.#events.has(key))
+        {
+            this.#element.addEventListener(key,this.#events.get(key));
+            this.#state.events.set(key,false);
+        }
+        else
+        {
+            this.#element.removeEventListener(key,this.#eventsToRemove.get(key));
+            this.#eventsToRemove.delete(key);
+            this.#state.events.delete(key);
+        }
+    }
+
+    async createChild(instance,compose=false){
+        const element = await instance.build(compose);
+        if (compose)this.#element.appendChild(element);
+    }
+
+    async build(compose=false)
+    {
         if (this.#state.content){
             this.#element.textContent = this.#content;
             this.#state.content = false;
         }
 
-        for (const [key,value] of this.#state.attributes){
-            if (value){
-                if (this.#attributes.has(key))
-                {
-                    this.#element.setAttribute(key,this.#attributes.get(key));
-                    this.#state.attributes.set(key,false);
-                }
-                else
-                {
-                    this.#element.removeAttribute(key); 
-                    this.#state.attributes.delete(key);
-                }
+        for (const [key,value] of this.#state.attributes)
+            if (value)this.conciliateAttributes(key);
+
+        for (const [key,value] of this.#state.events)
+            if (value)this.conciliateEvents(key);
+
+        const me = new Map(Object.entries(this));
+
+        for (const [prop,instance] of me)
+        {
+            if (instance instanceof Cthulhu)
+                this.createChild(instance,compose);
+            else if (instance instanceof Array)
+                instance.forEach(async (i,index)=>{
+                    if (i instanceof Cthulhu)
+                        this.createChild(i,compose);
+                    else 
+                    {
+                        this[prop][index] =new Cthulhu(i,prop);
+                        this.createChild(this[prop][index],true);
+                    }
+                });
+            else
+            {
+                this[prop]=new Cthulhu(instance,prop);
+                this.createChild(this[prop],true);
             }
         }
-
-        for (const [key,value] of this.#state.events){
-            if (value){
-                if (this.#events.has(key)){
-                    this.#element.addEventListener(key,this.#events.get(key));
-                    this.#state.events.set(key,false);
-                }
-                else
-                {
-                    this.#element.removeEventListener(key,this.#eventsToRemove.get(key));
-                    this.#eventsToRemove.delete(key);
-                    this.#state.events.delete(key);
-                }
-            }
-        }
-
-        const props = Object.keys(this);
-
-        props
-        .filter(o=>this[o] instanceof Cthulhu)
-        .map(async o=>{
-            const ne = await this[o].build(compose)
-            if (compose)this.#element.appendChild(ne);
-        });
-
-        props
-        .filter(o=>this[o] instanceof Array)
-        .forEach(o=>
-            this[o].forEach(
-                async e=>{
-                    const ne = await e.build(compose);
-                    this.#element.appendChild(ne)
-                }
-            )
-        );
-
+        
         return this.#element;
     }
     
