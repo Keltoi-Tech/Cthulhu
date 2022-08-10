@@ -1,26 +1,10 @@
-import { kek } from "./model";
+import { HtmlComponent } from "./component";
+import { kek } from "./utils";
 
-class ComponentRoot extends HTMLElement{
-    #root;
-    #cthulhu;
-    constructor(cthulhu,name=''){
-        super();
-        this.#cthulhu = cthulhu;
-        this.#root = this.attachShadow({mode:'closed'});
-        this.#cthulhu.build(true).then(e=>this.#root.appendChild(e));
-        this.setAttribute('name',name);
-    }
-
-    get root(){
-        return this.#root;
-    }
-
-    get cthulhu(){
-        return this.#cthulhu;
-    }
-}
-if (customElements.get('component-root')===undefined) 
-    customElements.define('component-root',ComponentRoot);
+const fthagn=(e,prop)=>
+    e instanceof Cthulhu || e instanceof HTMLElement
+        ?e
+        :new Cthulhu(e,prop);
 
 export class Cthulhu{
     #element = new DocumentFragment();
@@ -96,19 +80,16 @@ export class Cthulhu{
         const me = new Map(Object.entries(this));
 
         for (const [prop,instance] of me){
-            if (instance instanceof Cthulhu)
-                instance.dispose();
-            else if (instance instanceof Array){
+            if (instance instanceof Cthulhu) instance.dispose();
+            else if (instance instanceof Array)
                 instance.forEach(i=>{
                     if (i instanceof Cthulhu)i.dispose();
                 });
-            }
         }
     }
 
     async remove(child='',index=0){
-        if (this[child] instanceof Array)
-        {
+        if (this[child] instanceof Array){
             const subject = this[child][index];
             if (subject instanceof Cthulhu){
                 subject.dispose();
@@ -116,9 +97,7 @@ export class Cthulhu{
             }
             
             this[child].splice(index,1);
-        }
-        else
-        {
+        } else {
             if (this[child] instanceof Cthulhu){
                 this[child].dispose();
                 this.#element.removeChild(this[child].element);
@@ -128,13 +107,10 @@ export class Cthulhu{
         } 
     }
 
-    constructor(o={},name='',component=false){
+    constructor(o = {},name = ''){
         const map = new Map(Object.entries(o));
 
-        if (name!='')
-            this.#element = document.createElement(kek(name));
-        else if(component)
-            this.#element = new ComponentRoot(o,name).cthulhu;
+        if (name!=='') this.#element = document.createElement(kek(name));
 
         if (map.has('content')){
             this.#content= map.get('content');
@@ -144,45 +120,41 @@ export class Cthulhu{
 
         if (map.has('events')){
             this.#events = new Map(Object.entries(o.events));
-            for (const ev of this.#events.keys())
-                this.#state.events.set(ev,true)
+            for (const ev of this.#events.keys()){
+                this.#state.events.set(ev,true);
+            }
             map.delete('events');
         }        
 
         if (map.has('attributes')){
             this.#attributes = new Map(Object.entries(o.attributes));
-            for(const attr of this.#attributes.keys())
+            for(const attr of this.#attributes.keys()){
                 this.#state.attributes.set(attr,true);
+            }
             map.delete('attributes');
         }
 
         for(const [prop,e] of map)
             Array.isArray(map.get(prop))
-                ?this[prop] = e.map(sub=>sub instanceof Cthulhu?sub:new Cthulhu(sub,prop))
-                :this[prop] = e instanceof Cthulhu?e:new Cthulhu(e,prop);
+                ?this[prop] = e.map(sub=>fthagn(sub,prop))
+                :this[prop] = fthagn(e,prop)
     }
 
     conciliateAttributes(key=''){
-        if (this.#attributes.has(key))
-        {
+        if (this.#attributes.has(key)) {
             this.#element.setAttribute(kek(key),this.#attributes.get(key));
             this.#state.attributes.set(key,false);
-        }
-        else
-        {
+        } else {
             this.#element.removeAttribute(key); 
             this.#state.attributes.delete(key);
         }
     }
 
     conciliateEvents(key=''){
-        if (this.#events.has(key))
-        {
+        if (this.#events.has(key)){
             this.#element.addEventListener(key,this.#events.get(key));
             this.#state.events.set(key,false);
-        }
-        else
-        {
+        } else {
             this.#element.removeEventListener(key,this.#eventsToRemove.get(key));
             this.#eventsToRemove.delete(key);
             this.#state.events.delete(key);
@@ -190,7 +162,9 @@ export class Cthulhu{
     }
 
     async createChild(instance,compose=false){
-        const element = await instance.build(compose);
+        const element = (instance instanceof Cthulhu)
+                            ?await instance.build(compose)
+                            :instance;
         if (compose)this.#element.appendChild(element);
     }
 
@@ -209,28 +183,24 @@ export class Cthulhu{
 
         const me = new Map(Object.entries(this));
 
-        for (const [prop,instance] of me)
-        {
-            if (instance instanceof Cthulhu)
-                this.createChild(instance,compose);
-            else if (instance instanceof Array)
+        for (const [prop,instance] of me){
+            if (instance instanceof Array){
                 instance.forEach(async (i,index)=>{
-                    if (i instanceof Cthulhu)
-                        this.createChild(i,compose);
-                    else 
-                    {
+                    if (i instanceof Cthulhu || i instanceof HtmlComponent) {
+                        await this.createChild(i,compose);
+                    } else {
                         this[prop][index] =new Cthulhu(i,prop);
-                        this.createChild(this[prop][index],true);
+                        await this.createChild(this[prop][index],true);
                     }
                 });
-            else
-            {
+            } else if(instance instanceof Cthulhu || instance instanceof HtmlComponent){
+                await this.createChild(instance,compose);
+            } else {
                 this[prop]=new Cthulhu(instance,prop);
-                this.createChild(this[prop],true);
+                await this.createChild(this[prop],true);
             }
         }
         
         return this.#element;
     }
-    
 }

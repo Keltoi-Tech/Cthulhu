@@ -1,6 +1,11 @@
-import { cthulhu } from "./model";
+import { Routing } from "./routing";
 
-export const view=async (fthagn)=>{
+export const view=(instance=async()=>{})=>{
     document.body.innerHTML='';
-    cthulhu(document.body,await fthagn());
+    document.body.appendChild(instance());
 };
+
+export const entry=(routing=new Routing())=>{
+    window.onpopstate=()=>view(routing.to(window.location.pathname).index);
+    view(routing.to(window.location.pathname).index);
+}

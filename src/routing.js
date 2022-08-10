@@ -3,8 +3,7 @@ export class Routing {
         this.routes = routes;
     }
 
-    to=(path='/')=>
-    {
+    to=(path='/')=> {
         const tokenPath=path.split('/');
         let route={};
         let paramIndex = 0;
@@ -12,15 +11,13 @@ export class Routing {
         let skip = false;
 
         tokenPath.every((p,i)=>{
-            if (p==''){
+            if (p===''){
                 route = this.routes;
                 params =('params' in route)?Object.keys(route.params):[];
                 skip = ('master' in route)?route.master:false;                
             }
-            else
-            {
-                if (!!route)
-                {
+            else {
+                if (!!route){
                     if (p in route){
                         if (skip){
                             route.sub={
@@ -32,25 +29,23 @@ export class Routing {
                         route = route[p];
                         params =('params' in route)?Object.keys(route.params):[];
                         skip = ('master' in route)?route.master:false;
-                    }else if (params.length>0){
+                    } else if (params.length>0){
                         route.params[params[paramIndex]]=p;
                         paramIndex++;
-                    }else route=undefined;
+                    } else route=undefined;
                 }
             }
 
             return true;
         })
 
-        if ('index' in route)
-        {
-            history.pushState({state:'new'},'',path)
+        if ('index' in route){
+            history.pushState({state:'new'},'',path);
             return {
                 index:route.index,
                 params:route.params,
                 sub:!!route.sub?route.sub:null
             }
-        }
-        else return route.notFound;
+        } else return route.notFound;
     }
 }
