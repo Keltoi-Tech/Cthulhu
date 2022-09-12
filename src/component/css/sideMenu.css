@@ -1,0 +1,29 @@
+aside{
+    position:absolute;
+    padding: 0;
+    height:100%;
+    top:0px;
+    background-color: rgba(0,0,0);
+    color:white;
+    transition:width 1s ease-in-out;
+    overflow: hidden;
+}
+
+aside.inactive{
+    width: 0;
+}
+
+aside.active{
+    width:377px;
+}
+
+aside > span{
+    margin-left: 5%;
+    padding: 1px ;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:xx-large;
+}
+
+aside > span:hover{
+    cursor: pointer;
+}

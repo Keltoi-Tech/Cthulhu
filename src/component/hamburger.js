@@ -23,8 +23,10 @@ const style={
 
 export class HamburgerMenu extends HtmlComponent{
     #clicked;
+    #rotate;
     constructor(){
         super();
+        this.#rotate= false;
         this.#clicked=false;
         this.template = {
             style,
@@ -43,10 +45,12 @@ export class HamburgerMenu extends HtmlComponent{
     clickedUp(){
         this.#clicked = !this.#clicked;
         const css = this.root.div.attributes['class'];
-        if (this.#clicked){
-            this.root.div.setAttribute('class',`${css} clicked`);
-        } else { 
-            this.root.div.setAttribute('class',css.replace(' clicked',''))
+        if (this.#rotate){
+            if (this.#clicked){
+                this.root.div.setAttribute('class',`${css} clicked`);
+            } else { 
+                this.root.div.setAttribute('class',css.replace(' clicked',''))
+            }
         }
         this.root.div.build();
     }
@@ -71,18 +75,22 @@ export class HamburgerMenu extends HtmlComponent{
         this.style.width = "fit-content";
         this.style.display = "flex";
 
+        this.#rotate = this.getAttribute('rotate')==='true';
         this.border = this.getAttribute('border')==='true';
         this.backgroundColor = this.getAttribute('background-color');
         this.stripeColor = this.getAttribute('stripe-color');
     }
 
     static get observedAttributes(){
-        return ['border','background-color','stripe-color'];
+        return ['border','background-color','stripe-color','rotate'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         if (!!oldValue){
             switch(name){
+                case 'rotate':{
+                    this.rotate = newValue=='true';
+                };break;
                 case 'border':{
                     this.border = newValue;
                 };break;

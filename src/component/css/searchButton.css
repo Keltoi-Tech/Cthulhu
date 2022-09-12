@@ -1,0 +1,10 @@
+div{
+    width:90px;
+    height: 34px;
+}
+
+div > button{
+    width:auto;
+    color: black;
+    font-size: larger;
+}
