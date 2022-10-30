@@ -1,0 +1,27 @@
+footer{
+    background-color: black;
+    color:white;
+    font-size: 21px;
+    display:flex;
+    flex-direction: column;
+}
+
+footer > header {
+    background-color: transparent;
+    flex: 1;
+    width: 100%;
+}
+
+footer > header > aside {
+    width:50%;
+}
+
+footer > header > aside > h2{
+    padding: 3px;
+    margin: 0;
+}
+
+footer > header > aside > hr{
+    border: none;
+    border-bottom: 1px solid rgba(144,144,144,0.618);
+}

@@ -4,11 +4,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode:'development',
     entry: {
-        index:'./src/index.js'
+        index:['./src/index.js','./src/css/index.css']
     },
     plugins: [
         new HtmlWebpackPlugin({
-          title: 'Cthulhu'
+          title: 'Cthulhu',
+          template:'./src/index.html',
+          inject:'body'
         })
     ],    
     output: {
@@ -28,6 +30,10 @@ module.exports = {
           test: /\.css$/i,
           use: ["css-loader"]
         },
+        {
+          test: /\.(svg|png|jpe?g|gif)$/i,
+          use: 'file-loader'
+        }
       ],
     },
   };

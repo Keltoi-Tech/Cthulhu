@@ -16,7 +16,8 @@ export class Routing {
                 params =('params' in route)?Object.keys(route.params):[];
                 skip = ('master' in route)?route.master:false;                
             }
-            else {
+            else 
+            {
                 if (!!route){
                     if (p in route){
                         if (skip){

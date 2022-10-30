@@ -2,8 +2,19 @@ import { HtmlComponent } from "../component";
 import css from './css/sideMenu.css';
 
 export class SideMenu extends HtmlComponent{
-    constructor(){
+    constructor(innerElements=[{}]){
         super();
+
+        innerElements.unshift({
+            content:String.fromCodePoint(9746),
+            events:{                                
+                click:(e)=>{
+                    e.stopPropagation();
+                    this.status(false)
+                }
+            }
+        });
+
         this.template={
             style:{
                 content:css
@@ -12,17 +23,7 @@ export class SideMenu extends HtmlComponent{
                 attributes:{
                     class:'inactive'
                 },
-                span:[
-                    {
-                        content:String.fromCodePoint(9746), 
-                        events:{                                
-                            click:(e)=>{
-                                e.stopPropagation();
-                                this.status(false)
-                            }
-                        }
-                    }
-                ]
+                p:innerElements
             }
         }
     }
@@ -33,19 +34,15 @@ export class SideMenu extends HtmlComponent{
         this.style.width = "fit-content";
     }
 
-    static get observedAttributes(){
-        return ['active'];
-    }
+    static get observedAttributes(){return ['active']};
 
     status=(s = false)=>{
-        console.log(s)
+        console.log(s);
         this.root.aside.setAttribute('class',s?'active':'inactive');
         this.root.aside.build();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (!!oldValue && name=='active'){
-            this.status(newValue=='true');
-        }
-    }    
+        if (!!oldValue && name=='active')this.status(newValue=='true');
+    }
 }

@@ -17,13 +17,22 @@ aside.active{
     width:377px;
 }
 
-aside > span{
+aside > p{
     margin-left: 5%;
     padding: 1px ;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size:xx-large;
 }
 
-aside > span:hover{
+aside > p:hover{
     cursor: pointer;
+}
+
+aside > p > span{
+    float: right;
+    padding-right: 34px;
+}
+
+aside > p > ul > li{
+    font-size: 21px;
 }
