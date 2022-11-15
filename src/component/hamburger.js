@@ -3,6 +3,7 @@ import { HtmlComponent } from "../component";
 const style={
     content:`
         div{
+            margin-left:1.618%;
             padding:3px 5px;
             width:34px;
             transition:transform 1s;

@@ -4,13 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode:'development',
     entry: {
-        index:['./src/index.js','./src/css/index.css']
+        index:'./src/index.js'
     },
     plugins: [
         new HtmlWebpackPlugin({
           title: 'Cthulhu',
-          template:'./src/index.html',
-          inject:'body'
         })
     ],    
     output: {
