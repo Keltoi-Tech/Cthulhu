@@ -37,10 +37,7 @@ export const Header=()=>{
             }
         }
     ]);
-
-    const footer = component(FooterMenu,{});
-
-    return {
+        return {
         style:{
             content:css
         },
@@ -72,11 +69,5 @@ export const Header=()=>{
             }
         },
         hr:[{}],
-        section:{
-            h1:{
-                content:'Aaaaaa'
-            }
-        },
-        footer
     }
 }
