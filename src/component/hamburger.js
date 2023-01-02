@@ -3,6 +3,7 @@ import { HtmlComponent } from "../component";
 const style={
     content:`
         div{
+            margin-top:1px;
             margin-left:1.618%;
             padding:3px 5px;
             width:34px;

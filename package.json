@@ -1,6 +1,7 @@
 {
   "name": "cthulhu",
   "version": "1.0.0",
+  "description": "Object rendering web framework, based on DaSilva's cthulhu processing model",
   "private": "true",
   "scripts": {
     "build": "webpack"

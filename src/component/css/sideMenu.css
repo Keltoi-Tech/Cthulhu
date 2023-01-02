@@ -1,8 +1,9 @@
 aside{
-    position:absolute;
+    position:fixed;
     padding: 0;
-    height:100%;
     top:0px;
+    height: 100%;
+    z-index: 1;
     background-color: rgba(0,0,0);
     color:white;
     transition:width 1s ease-in-out;
@@ -17,22 +18,19 @@ aside.active{
     width:377px;
 }
 
-aside > p{
-    margin-left: 5%;
-    padding: 1px ;
+aside > div{
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size:xx-large;
+    font-size: larger;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-aside > p:hover{
+aside > div.close{
+    font-size: xx-large;
     cursor: pointer;
 }
 
-aside > p > span{
-    float: right;
-    padding-right: 34px;
-}
-
-aside > p > ul > li{
-    font-size: 21px;
+aside > div.separator{
+    border-bottom:1px solid rgba(233,233,233,0.618) ;
 }

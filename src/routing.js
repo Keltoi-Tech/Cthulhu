@@ -21,7 +21,7 @@ export class Routing {
                 if (!!route){
                     if (p in route){
                         if (skip){
-                            route.sub={
+                             route.sub={
                                 routing:route[p],
                                 url:'/'+tokenPath.slice(i+1,tokenPath.length).join('/')
                             }

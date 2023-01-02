@@ -6,6 +6,9 @@ export class SideMenu extends HtmlComponent{
         super();
 
         innerElements.unshift({
+            attributes:{
+                class:'close'
+            },
             content:String.fromCodePoint(9746),
             events:{                                
                 click:(e)=>{
@@ -23,7 +26,7 @@ export class SideMenu extends HtmlComponent{
                 attributes:{
                     class:'inactive'
                 },
-                p:innerElements
+                div:innerElements
             }
         }
     }
@@ -37,7 +40,6 @@ export class SideMenu extends HtmlComponent{
     static get observedAttributes(){return ['active']};
 
     status=(s = false)=>{
-        console.log(s);
         this.root.aside.setAttribute('class',s?'active':'inactive');
         this.root.aside.build();
     }

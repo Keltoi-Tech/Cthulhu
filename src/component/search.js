@@ -60,7 +60,6 @@ export class SearchButton extends HtmlComponent
         super.connectedCallback();
 
         this.style.width = "fit-content";
-        this.style.display = "flex";
     }
 
     static get observedAttributes(){
