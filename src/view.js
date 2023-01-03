@@ -1,9 +1,8 @@
 import { Routing } from "./routing";
 
-export const compose=(instance=async()=>{})=>{
-    instance()
-    .then(e=>document.body.appendChild(e));
-}
+export const head=(instance=async()=>{})=>instance().then(e=>document.head.appendChild(e));
+
+export const compose=(instance=async()=>{})=>instance().then(e=>document.body.appendChild(e));
 
 export const view=(route={index:()=>{},params:[],sub:{}})=>{
     document.body.innerHTML='';
@@ -14,17 +13,8 @@ export const entry=(routing=new Routing())=>{
     window.onpopstate=()=>{
         let route = routing.to(window.location.pathname);
         view(route);
-        /*if (!!route.params){
-            if (!!route.sub) route.params.sub = route.sub;
-            view(route.index,route.params);
-        } else view(route.index);*/
     };
 
     let route = routing.to(window.location.pathname);
-    /*if (!!route.params){
-        if (!!route.sub) route.params.sub = route.sub;
-        view(route.index,route.params);
-    }
-    else view(route.index);*/
     view(route);
 }
