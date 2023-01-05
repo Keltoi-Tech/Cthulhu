@@ -1,11 +1,15 @@
 import { Cthulhu } from "./cthulhu";
 import { kek } from "./utils";
+import { HtmlMeta } from "./html-meta";
 
-export class HtmlComponent extends HTMLElement{
+export class HtmlComponent extends HtmlMeta{
     constructor(){
         super();
-        this.template={};
-        this.element = this.attachShadow({mode:'closed'});
+    }
+
+    generate(){
+        this.root = new Cthulhu(this.template);
+        this.root.build(true).then(e=>this.element.appendChild(e));        
     }
 
     disconnectedCallback(){
@@ -13,12 +17,7 @@ export class HtmlComponent extends HTMLElement{
     }
 
     connectedCallback(){
-        this.root = new Cthulhu(this.template);
-        this.root.build(true).then(e=>this.element.appendChild(e));        
-    }
-
-    appendChild(node=new Node){
-        this.element.appendChild(node);
+        this.generate();
     }
 }
 

@@ -3,9 +3,16 @@ nav{
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
 }
 
 nav > img.logo{
-    width: 377px;
-    height: 377px;
+    width: 100%;
+}
+
+@media (min-width:377px) {
+    nav > img.logo{
+        width: 377px;
+        height: 377px;
+    }    
 }

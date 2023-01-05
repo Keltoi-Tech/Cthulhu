@@ -1,5 +1,5 @@
 import { component } from "../component"
-import { MainContent } from "../component/main/main"
+import { MainContent } from "../component/main"
 
 export const AppMain=(sub={})=>{
     let initial = Object.keys(sub).length==0

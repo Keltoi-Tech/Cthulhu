@@ -1,7 +1,7 @@
 import { trait } from "../../component";
-import { Article } from "../article/article";
-import { Header } from "../header/header";
-import css from '../article/article.css';
+import { Article } from "../article";
+import { Header } from "../header";
+import css from './main.css';
 
 export const MainContent=()=>{
 

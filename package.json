@@ -1,10 +1,10 @@
 {
-  "name": "cthulhu",
-  "version": "1.0.1",
+  "name": "cthulhu-fhtagn",
+  "version": "1.0.3",
   "description": "Object rendering web framework, based on DaSilva's cthulhu processing model",
-  "private": "true",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "serve":"webpack serve"
   },
   "devDependencies": {
     "css-loader": "^6.7.1",

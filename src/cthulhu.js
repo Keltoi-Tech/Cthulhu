@@ -1,4 +1,4 @@
-import { HtmlComponent } from "./component";
+import { HtmlMeta } from "./html-meta";
 import { kek } from "./utils";
 
 const fthagn=(e,prop)=>
@@ -186,14 +186,14 @@ export class Cthulhu{
         for (const [prop,instance] of me){
             if (instance instanceof Array){
                 instance.forEach(async (i,index)=>{
-                    if (i instanceof Cthulhu || i instanceof HtmlComponent) {
+                    if (i instanceof Cthulhu || i instanceof HtmlMeta) {
                         await this.createChild(i,compose);
                     } else {
                         this[prop][index] =new Cthulhu(i,prop);
                         await this.createChild(this[prop][index],true);
                     }
                 });
-            } else if(instance instanceof Cthulhu || instance instanceof HtmlComponent){
+            } else if(instance instanceof Cthulhu || instance instanceof HtmlMeta){
                 await this.createChild(instance,compose);
             } else {
                 this[prop]=new Cthulhu(instance,prop);

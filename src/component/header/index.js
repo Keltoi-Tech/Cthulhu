@@ -6,7 +6,7 @@ export const Header=()=>{
         style:{content:css},
         nav:{
             h1:{
-                content:'Wellcome to Cthulhu!'
+                content:'Welcome to Cthulhu!'
             },
             img:{
                 attributes:{
