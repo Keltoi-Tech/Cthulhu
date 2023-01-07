@@ -1,4 +1,4 @@
-import { trait } from "../../component";
+import { trait } from "cthulhu-rlyeh";
 import { Article } from "../article";
 import { Header } from "../header";
 import css from './main.css';

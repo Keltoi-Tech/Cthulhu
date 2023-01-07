@@ -1,4 +1,4 @@
-import { component } from "../component"
+import { component } from "cthulhu-rlyeh"
 import { MainContent } from "../component/main"
 
 export const AppMain=(sub={})=>{

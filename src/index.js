@@ -1,6 +1,5 @@
-import { entry, head} from "./view";
+import {entry,head,trait} from 'cthulhu-rlyeh';
 import { route } from "./misc/route";
-import { trait } from "./component";
 import css from './css/index.css';
 
 const Style=()=>{
