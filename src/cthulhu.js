@@ -1,16 +1,16 @@
 export class Cthulhu{
     #engine;
-    #input;
+    #instance;
     #param;
 
-    constructor(input, param,engine=async()=>{}){
+    constructor(instance, param,engine=async()=>{}){
         this.#engine= engine;
-        this.#input = input;
+        this.#instance = instance;
         this.#param = param;
     }
 
-    get input(){return this.#input;}
-    set input(value){this.#input=value;}
+    get input(){return this.#instance;}
+    set input(value){this.#instance=value;}
 
     get param(){return this.#param;}
     set param(value){this.#param=value;}
