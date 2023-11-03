@@ -9,8 +9,8 @@ export class Cthulhu{
         this.#param = param;
     }
 
-    get input(){return this.#instance;}
-    set input(value){this.#instance=value;}
+    get instance(){return this.#instance;}
+    set instance(value){this.#instance=value;}
 
     get param(){return this.#param;}
     set param(value){this.#param=value;}
