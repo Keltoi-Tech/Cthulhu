@@ -1,19 +1,41 @@
+import { Core } from "./core";
+
 export class Cthulhu{
     #engine;
-    #instance;
-    #param;
+    #element;
+    #template;
 
-    constructor(instance, param,engine=async()=>{}){
-        this.#engine= engine;
-        this.#instance = instance;
-        this.#param = param;
+    static instance(template,param={},engine={
+        build:async(t,p)=>new Core(),
+        change:async(self)=>{}
+    }){
+        return new Cthulhu(template,param,engine);
     }
 
-    get instance(){return this.#instance;}
-    set instance(value){this.#instance=value;}
+    constructor(template,param={},engine={
+        build:async(t,p)=>new Core(),
+        change:async(self)=>{}
+    }){
+        this.#engine = engine
 
-    get param(){return this.#param;}
-    set param(value){this.#param=value;}
+        this
+        .#engine
+        .build(template,param)
+        .then(core=>{
+            this.#element=core.element
+            this.#template = core.template
+            return core.props
+        })
+        .then(props=>Object.assign(this,props))
+    }
 
-    call=async()=>this.#engine(this);
+    get template(){return this.#template}
+    set template(value){this.#template=value}
+
+    get engine(){return this.#engine}
+    
+    get element(){return this.#element}
+    set element(value){this.#element=value;}
+
+    async change(){return this.#engine.change(this)}
 }

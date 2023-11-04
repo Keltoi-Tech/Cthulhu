@@ -1,11 +1,15 @@
 import { Cthulhu } from "./cthulhu"
 
-export const tentacle=(cthulhu,entries,engine)=>
-    entries
-    .map(([key,value])=>{
-        cthulhu[key] = Array.isArray(value)
-            ?value.map(item=>new Cthulhu(item,key,engine))
-            :new Cthulhu(value,key,engine)
+export const tentacle=(children,build=async(t,p)=>new Core())=>
+    Object
+    .entries(children)
+    .reduce(
+        (o,[key,value])=>{
+            o[key] = Array.isArray(value)
+                ?value.map(item=>Cthulhu.instance(item,{key},build))
+                :new Cthulhu(value,{key},build)
 
-        return cthulhu[key]
-    });
+            return o
+        },{}
+    )
+    
