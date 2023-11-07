@@ -1,5 +1,4 @@
 export class Core{
-    props=([key='',value])
+    props={}
     element={}
-    template={}
 }

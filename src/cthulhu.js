@@ -4,6 +4,7 @@ export class Cthulhu{
     #engine;
     #element;
     #template;
+    #param;
 
     static instance(template,param={},engine={
         build:async(t,p)=>new Core(),
@@ -17,16 +18,8 @@ export class Cthulhu{
         change:async(self)=>{}
     }){
         this.#engine = engine
-
-        this
-        .#engine
-        .build(template,param)
-        .then(core=>{
-            this.#element=core.element
-            this.#template = core.template
-            return core.props
-        })
-        .then(props=>Object.assign(this,props))
+        this.#template = template;
+        this.#param = param;
     }
 
     get template(){return this.#template}
@@ -37,5 +30,16 @@ export class Cthulhu{
     get element(){return this.#element}
     set element(value){this.#element=value;}
 
-    async change(){return this.#engine.change(this)}
+    build=async ()=>{
+        await this
+        .#engine
+        .build(this.#template,this.#param)
+        .then(core=>{
+            this.#element=core.element
+            Object.assign(this,core.props)
+        })
+
+        return this
+    }
+    change=async()=>this.#engine.change(this)
 }

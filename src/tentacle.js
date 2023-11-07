@@ -1,15 +1,22 @@
 import { Cthulhu } from "./cthulhu"
 
-export const tentacle=(children,build=async(t,p)=>new Core())=>
+export const tentacle=(
+    props={},
+    children={},
+    engine={
+        build:async(t,p)=>new Core(),
+        change:async(s)=>s
+    },
+    filter=([key,value])=>key==key
+)=>
     Object
     .entries(children)
-    .reduce(
-        (o,[key,value])=>{
-            o[key] = Array.isArray(value)
-                ?value.map(item=>Cthulhu.instance(item,{key},build))
-                :new Cthulhu(value,{key},build)
+    .filter(filter)
+    .map(([key,value])=>{
+        props[key] =value
 
-            return o
-        },{}
-    )
+        return Array.isArray(value)
+            ?Promise.all(value.map(item=>Cthulhu.instance(item,{key},engine).build()))
+            :Cthulhu.instance(value,{key},engine).build()
+    })
     
