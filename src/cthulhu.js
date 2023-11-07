@@ -30,16 +30,15 @@ export class Cthulhu{
     get element(){return this.#element}
     set element(value){this.#element=value;}
 
-    build=async ()=>{
-        await this
+    build=async ()=>
+        this
         .#engine
         .build(this.#template,this.#param)
         .then(core=>{
             this.#element=core.element
             Object.assign(this,core.props)
+            return this
         })
 
-        return this
-    }
     change=async()=>this.#engine.change(this)
 }
