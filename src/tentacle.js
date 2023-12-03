@@ -1,4 +1,4 @@
-import { Cthulhu } from "./cthulhu"
+import { Cthulhu } from "./cthulhu.js"
 
 export const tentacle=(
     props={},

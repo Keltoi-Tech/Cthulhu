@@ -1,3 +1,3 @@
-export { Cthulhu } from "./cthulhu";
-export { Core } from './core';
-export { tentacle } from './tentacle';
+export { Cthulhu } from "./cthulhu.js";
+export { Core } from './core.js';
+export { tentacle } from './tentacle.js';

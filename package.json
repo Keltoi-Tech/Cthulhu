@@ -1,19 +1,27 @@
 {
-  "version": "2.0.6",
+  "version": "2.0.15",
   "description": "Cthulhu - Node package to build nodes",
   "name": "cthulhu",
-  "main":"dist/index.js",
+  "type": "module",
+  "module": "index.js",
+  "main": "index.js",
+  "author": "Keltoi",
   "scripts": {
-    "build": "webpack --mode=production --node-env=production",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch"
+    "test": "npm run build & npm link",
+    "build": "rollup -c"
   },
+  "files": ["index.js"],
+  "bugs": {
+    "email": "devops@keltoi.tech"
+  },
+  "keywords": [
+    "Cthulhu",
+    "Design Pattern",
+    "Reducing",
+    "Node Architecture"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/preset-env": "^7.22.9",
-    "babel-loader": "^9.1.3",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.6.1"
   }
 }
