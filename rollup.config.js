@@ -10,7 +10,7 @@ export default {
     ],
     output:[
         {
-            file:'index.js',
+            file:'dist/index.js',
             format:'es'
         }
     ]
