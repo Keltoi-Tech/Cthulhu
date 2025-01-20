@@ -1,16 +1,17 @@
 {
-  "version": "2.0.16",
-  "description": "Cthulhu - Node package to build nodes",
+  "version": "3.1.5",
+  "description": "Cthulhu - Node package to build powerfull nodes",
   "name": "cthulhu",
   "type": "module",
-  "module": "index.js",
-  "main": "index.js",
+  "module": "dist/index.js",
+  "main": "dist/index.js",
   "author": "Keltoi",
+  "license":"MIT",
   "scripts": {
     "test": "npm run build & npm link",
     "build": "rollup -c"
   },
-  "files": ["index.js"],
+  "files": ["dist"],
   "bugs": {
     "email": "devops@keltoi.tech"
   },
