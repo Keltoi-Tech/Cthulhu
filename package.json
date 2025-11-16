@@ -1,5 +1,5 @@
 {
-  "version": "3.1.5",
+  "version": "3.2.0",
   "description": "Cthulhu - Node package to build powerfull nodes",
   "name": "cthulhu",
   "type": "module",
